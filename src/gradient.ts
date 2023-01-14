@@ -1,3 +1,5 @@
+import { createElement } from "./utils"
+
 interface Props {
     el: HTMLElement
     previewEl: HTMLElement
@@ -17,6 +19,7 @@ export class GradientPicker {
     colorHandlersEl: HTMLElement
     type: GradientType = "linear"
     stops: GradientStop[] = []
+    isDragging = false
 
     constructor({ el, previewEl }: Props) {
         this.el = el
@@ -26,6 +29,8 @@ export class GradientPicker {
         this.previewEl.append(this.colorHandlersEl)
         this.addColorStop("#3494E6", .5) 
         this.addColorStop("#EC6EAD", 99)
+
+        this.listener()
     }
 
     /**
@@ -45,7 +50,9 @@ export class GradientPicker {
     }
 
     getGradientString(type: GradientType = this.type) {
-        const colorConcat = this.stops.map(stop => `${stop.color} ${stop.position}%`).join(',')
+        const colorConcat = [...this.stops]
+                                .sort((a,b) => a.position - b.position)
+                                .map(stop => `${stop.color} ${stop.position}%`).join(',')
 
         if(type === 'radial') {
             const radialPositions: Record<GradientDirection, string> = {
@@ -63,6 +70,7 @@ export class GradientPicker {
 
     private updateElementBackground() {
         this.el.style.backgroundImage = this.getGradientString()
+        console.log('gradientstring ', this.getGradientString())
         this.previewEl.style.backgroundImage = this.getGradientString('linear')
     }
 
@@ -70,22 +78,97 @@ export class GradientPicker {
         const colorStop = this.stops[stopIndex]
 
         // Handler bar
-        const handler = document.createElement('div')
-        handler.classList.add('color__handler')
-        handler.style.setProperty('--handler-position', `${colorStop.position}%`)
+        const handler = createElement('div', { class: 'color__handler', 'data-index': stopIndex }, { '--handler-position': `${colorStop.position}%` })
 
         // Handler remover
-        const handlerRemover = document.createElement('div')
-        handlerRemover.classList.add('color__handler-remover')
-        handlerRemover.style.setProperty('--handler-position', `${colorStop.position}%`)
+        const handlerButtons = createElement('div', { class: 'color__handler-buttons', 'data-index': stopIndex }, { '--handler-position': `${colorStop.position}%` })
+        const handlerRemover = createElement('div', { class: 'color__handler-remover' })
 
+        // Color picker
+        const inputColorWrapper = createElement('div', {
+            type: 'color',
+            class: 'color__input-wrapper',
+        })
+        const inputColor = createElement('input', {
+            type: 'color',
+            class: 'color__input',
+            value: colorStop.color
+        })
+        inputColorWrapper.append(inputColor)
+        
+        inputColor.addEventListener('input', e => this.onColorChange(e as InputEvent, stopIndex))
+        handler.addEventListener('mousedown', e => this.onHandlerMouseDown(e, stopIndex))
+        handler.addEventListener('mouseup', e => this.onHandlerMouseUp(e, stopIndex))
+        this.previewEl.addEventListener('mousemove', e => this.onHandlerMouseMove(e))
         handlerRemover.addEventListener('click', e => {
             this.stops.splice(stopIndex, 1)
             handler.remove()
-            handlerRemover.remove()
+            handlerButtons.remove()
+            this.updateElementBackground()
         })
 
+        handlerButtons.append(handlerRemover, inputColorWrapper)
         this.colorHandlersEl.append(handler)
-        this.previewEl.append(handlerRemover)
+        this.previewEl.append(handlerButtons)
+    }
+
+    onHandlerMouseDown(event: MouseEvent, stopIndex: number) {
+        let handlerEl = event.target as HTMLElement
+        handlerEl.classList.add('active')
+        this.isDragging = true
+    }
+
+    onHandlerMouseMove(event: MouseEvent) {
+        if(!this.isDragging) return
+        
+        let handlerEl = document.querySelector('.color__handler.active')
+        if(!handlerEl?.classList.contains('active')) return 
+        const stopIndex = ~~(handlerEl.getAttribute('data-index') || 0)
+
+        const newStopPosition = this.getPercentage(event.clientX)
+        console.log(newStopPosition)
+
+        this.changePosition(stopIndex, newStopPosition)
+        this.updateElementBackground()
+    }
+
+    onHandlerMouseUp(event: MouseEvent, stopIndex: number) {
+        let handlerEl = event.target as HTMLElement
+        handlerEl.classList.remove('active')
+        this.isDragging = false
+    }
+
+    changeColor(stopIndex: number, color: string) {
+        this.stops[stopIndex].color = color
+    }
+
+    changePosition(stopIndex: number, position: number) {
+        this.stops[stopIndex].position = position
+        this.previewEl.querySelectorAll(`div[data-index='${stopIndex}']`).forEach(el => el.style.setProperty('--handler-position', position+'%'))
+    }
+
+    onColorChange(event: InputEvent, index: number) {
+        this.changeColor(index, (event.target as HTMLInputElement).value)
+        this.updateElementBackground()
+    }
+
+    getPercentage(mouseX: number) {
+        const rect = this.previewEl.getBoundingClientRect()
+        const clickPosition = mouseX - rect.x
+        const elementWidth = getComputedStyle(this.previewEl).width.slice(0, -2)
+        const newStopPosition = clickPosition/~~elementWidth * 100
+
+        return newStopPosition
+    }
+
+    listener() {
+        this.previewEl.addEventListener('click', e => {
+            if((e.target as HTMLElement).classList.contains('color__handler') || this.isDragging) return
+            if(!this.colorHandlersEl.contains(e.target as HTMLElement)) return
+
+            const newStopPosition = this.getPercentage(e.clientX)
+
+            this.addColorStop("#333333", newStopPosition)
+        })
     }
 }

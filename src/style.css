@@ -102,9 +102,9 @@ h1 {
   box-shadow: 1px 1px 2px #ccc;;
   border-radius: 50%;
   position: absolute;
-  top: -1.2rem;
+  top: -1.5rem;
   left: var(--handler-position);
-  transform: translateX(-50%)
+  transform: translateX(-40%)
 }
 .color__handler-remover:after {
   content: 'x';
@@ -116,10 +116,10 @@ h1 {
 .color__handler-remover:before {
   content: '';
   top: 100%;
-  background-color: rgb(72, 72, 72);
+  /* background-color: rgb(72, 72, 72); */
   position: absolute;
   width: 1px;
-  height: 3px;
+  height: 20px;
   z-index: 1;
 }
 .color__handler-remover:hover {
@@ -127,6 +127,25 @@ h1 {
 }
 .color__handler-remover:hover:after {
   color: rgb(229, 64, 64);
+}
+.color__input {
+  border: none;
+  border-radius: 50%;
+  transform: translate(-2px,-2px);
+}
+.color__input-wrapper {
+  width: 1.3rem;
+  height: 1.3rem;
+  border: 1px solid white;
+  border-radius: 50%;
+  overflow: hidden;
+  border: .1rem solid white;
+  outline: 1px solid #bbb;
+  position: absolute;
+  left: var(--handler-position);
+  cursor: pointer;
+  top: 110%;
+  transform: translateX(-40%);
 }
 .options {
   display: flex;
