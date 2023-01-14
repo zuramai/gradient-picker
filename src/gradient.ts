@@ -49,7 +49,7 @@ export class GradientPicker {
         this.updateElementBackground()
     }
 
-    getGradientString(type: GradientType = this.type) {
+    getGradientString(type: GradientType = this.type, direction: GradientDirection = this.direction) {
         const round = (num: number) => Math.round(num * 100) / 100
         const colorConcat = [...this.stops]
                                 .sort((a,b) => a.position - b.position)
@@ -58,21 +58,21 @@ export class GradientPicker {
         if(type === 'radial') {
             const radialPositions: Record<GradientDirection, string> = {
                 "bottom": "at center bottom",
-                "center": "circle",
+                "center": "",
                 "left": "at left center",
                 "right": "at center right",
                 "top": "at center top",
             }
-            return `radial-gradient(${radialPositions[this.direction]}, ${colorConcat})`
+            return `radial-gradient(circle ${radialPositions[direction]}, ${colorConcat})`
         } 
         
-        return `linear-gradient(to ${this.direction},${colorConcat})`
+        return `linear-gradient(to ${direction},${colorConcat})`
     }
 
     private updateElementBackground() {
         const gradientString = this.getGradientString()
         this.el.style.backgroundImage = gradientString
-        this.previewEl.style.backgroundImage = this.getGradientString('linear')
+        this.previewEl.style.backgroundImage = this.getGradientString('linear', 'right')
         let cssTextbox = document.getElementById('css')!
         cssTextbox.textContent = gradientString
     }
@@ -173,6 +173,18 @@ export class GradientPicker {
             const newStopPosition = this.getPercentage(e.clientX)
 
             this.addColorStop("#333333", newStopPosition)
+        })
+        const directionInput = document.getElementById('direction') as HTMLInputElement
+        const typeInput = document.getElementById('type') as HTMLInputElement
+
+        directionInput?.addEventListener('input', () => {
+            this.direction = directionInput.value as GradientDirection
+            this.updateElementBackground()
+        })
+        typeInput?.addEventListener('input', () => {
+            this.type = typeInput.value as GradientType
+            
+            this.updateElementBackground()
         })
     }
 }
