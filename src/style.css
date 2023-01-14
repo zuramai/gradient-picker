@@ -37,6 +37,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  font-family: 'Noto Sans Tangsa';
 }
 
 .container {
@@ -44,7 +45,8 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 4em;
+  font-family: 'Kaushan Script', 'arial';
   color: white;
   line-height: 1.1;
   margin-bottom: 2rem;
