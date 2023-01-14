@@ -100,10 +100,10 @@ export class GradientPicker {
         inputColorWrapper.append(inputColor)
         
         inputColor.addEventListener('input', e => this.onColorChange(e as InputEvent, stopIndex))
-        handler.addEventListener('mousedown', e => this.onHandlerMouseDown(e, stopIndex))
-        handler.addEventListener('mouseup', e => this.onHandlerMouseUp(e, stopIndex))
+        handler.addEventListener('mousedown', e => this.onHandlerMouseDown(e))
+        handler.addEventListener('mouseup', e => this.onHandlerMouseUp(e))
         this.previewEl.addEventListener('mousemove', e => this.onHandlerMouseMove(e))
-        handlerRemover.addEventListener('click', e => {
+        handlerRemover.addEventListener('click', () => {
             this.stops.splice(stopIndex, 1)
             handler.remove()
             handlerButtons.remove()
@@ -115,7 +115,7 @@ export class GradientPicker {
         this.previewEl.append(handlerButtons)
     }
 
-    onHandlerMouseDown(event: MouseEvent, stopIndex: number) {
+    onHandlerMouseDown(event: MouseEvent) {
         let handlerEl = event.target as HTMLElement
         handlerEl.classList.add('active')
         this.isDragging = true
@@ -136,7 +136,7 @@ export class GradientPicker {
         this.updateElementBackground()
     }
 
-    onHandlerMouseUp(event: MouseEvent, stopIndex: number) {
+    onHandlerMouseUp(event: MouseEvent) {
         let handlerEl = event.target as HTMLElement
         handlerEl.classList.remove('active')
         this.isDragging = false
