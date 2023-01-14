@@ -6,9 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
   </head>
-  <body>
-    <div id="app">
-      <h1>GradientPicker</h1>
+  <body class="center-both">
+    <div id="app" class="center-both">
+      <div class="container">
+        <h1 class="title">GradientPicker</h1>
+        <div class="card">
+          <div class="color-preview" id="preview"></div>
+
+          <div class="options">
+            <select name="direction" id="direction">
+              <option value="linear">Linear</option>
+              <option value="radial">Radial</option>
+            </select>
+            <select name="position" id="position">
+              <option value="radial">Right</option>
+              <option value="linear">Top</option>
+              <option value="radial">Left</option>
+              <option value="radial">Center</option>
+              <option value="radial">Bottom</option>
+            </select>
+          </div>
+
+          <div class="css-box">
+            <div class="css-box__header">
+              <h5>CSS Value</h5>
+              <button>Copy</button>
+            </div>
+            <textarea name="css" id="css" readonly></textarea>
+          </div>
+        </div>
+      </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
