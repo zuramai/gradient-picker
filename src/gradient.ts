@@ -3,6 +3,7 @@ import { createElement } from "./utils"
 interface Props {
     el: HTMLElement
     previewEl: HTMLElement
+    colorHandlersEl: HTMLElement
 }
 
 type GradientDirection = "top" | "left" | "center" | "bottom" | "right"
@@ -14,18 +15,17 @@ type GradientStop = {
 
 export class GradientPicker {
     direction: GradientDirection = "right"
-    el: HTMLElement
-    previewEl: HTMLElement
-    colorHandlersEl: HTMLElement
+    el: Props['el']
+    previewEl: Props['previewEl']
+    colorHandlersEl: Props['colorHandlersEl']
     type: GradientType = "linear"
     stops: GradientStop[] = []
     isDragging = false
 
-    constructor({ el, previewEl }: Props) {
+    constructor({ el, previewEl, colorHandlersEl }: Props) {
         this.el = el
         this.previewEl = previewEl
-        this.colorHandlersEl = document.createElement('div')
-        this.colorHandlersEl.classList.add('color__handlers')
+        this.colorHandlersEl = colorHandlersEl
         this.previewEl.append(this.colorHandlersEl)
         this.addColorStop("#3494E6", .5) 
         this.addColorStop("#EC6EAD", 99)
