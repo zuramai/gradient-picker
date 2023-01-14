@@ -81,10 +81,10 @@ export class GradientPicker {
         const colorStop = this.stops[stopIndex]
 
         // Handler bar
-        const handler = createElement('div', { class: 'color__handler', 'data-index': stopIndex }, { '--handler-position': `${colorStop.position}%` })
+        const handler = createElement('div', { class: 'color__handler', 'data-index': stopIndex.toString() }, { '--handler-position': `${colorStop.position}%` })
 
         // Handler remover
-        const handlerButtons = createElement('div', { class: 'color__handler-buttons', 'data-index': stopIndex }, { '--handler-position': `${colorStop.position}%` })
+        const handlerButtons = createElement('div', { class: 'color__handler-buttons', 'data-index': stopIndex.toString() }, { '--handler-position': `${colorStop.position}%` })
         const handlerRemover = createElement('div', { class: 'color__handler-remover' })
 
         // Color picker
@@ -130,6 +130,8 @@ export class GradientPicker {
 
         const newStopPosition = this.getPercentage(event.clientX)
 
+        if(newStopPosition < 0.5 || newStopPosition > 99.5) return
+
         this.changePosition(stopIndex, newStopPosition)
         this.updateElementBackground()
     }
@@ -146,7 +148,7 @@ export class GradientPicker {
 
     changePosition(stopIndex: number, position: number) {
         this.stops[stopIndex].position = position
-        this.previewEl.querySelectorAll(`div[data-index='${stopIndex}']`).forEach(el => el.style.setProperty('--handler-position', position+'%'))
+        this.previewEl.querySelectorAll(`div[data-index='${stopIndex}']`).forEach((el) => (el as HTMLElement).style.setProperty('--handler-position', position+'%'))
     }
 
     onColorChange(event: InputEvent, index: number) {
