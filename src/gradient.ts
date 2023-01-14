@@ -50,9 +50,10 @@ export class GradientPicker {
     }
 
     getGradientString(type: GradientType = this.type) {
+        const round = (num: number) => Math.round(num * 100) / 100
         const colorConcat = [...this.stops]
                                 .sort((a,b) => a.position - b.position)
-                                .map(stop => `${stop.color} ${stop.position}%`).join(',')
+                                .map(stop => ` ${stop.color} ${round(stop.position)}%`).join(',')
 
         if(type === 'radial') {
             const radialPositions: Record<GradientDirection, string> = {
@@ -65,13 +66,15 @@ export class GradientPicker {
             return `radial-gradient(${radialPositions[this.direction]}, ${colorConcat})`
         } 
         
-        return `linear-gradient(to ${this.direction}, ${colorConcat})`
+        return `linear-gradient(to ${this.direction},${colorConcat})`
     }
 
     private updateElementBackground() {
-        this.el.style.backgroundImage = this.getGradientString()
-        console.log('gradientstring ', this.getGradientString())
+        const gradientString = this.getGradientString()
+        this.el.style.backgroundImage = gradientString
         this.previewEl.style.backgroundImage = this.getGradientString('linear')
+        let cssTextbox = document.getElementById('css')!
+        cssTextbox.textContent = gradientString
     }
 
     private createStopHandler(stopIndex: number) {
@@ -120,13 +123,12 @@ export class GradientPicker {
 
     onHandlerMouseMove(event: MouseEvent) {
         if(!this.isDragging) return
-        
+
         let handlerEl = document.querySelector('.color__handler.active')
         if(!handlerEl?.classList.contains('active')) return 
         const stopIndex = ~~(handlerEl.getAttribute('data-index') || 0)
 
         const newStopPosition = this.getPercentage(event.clientX)
-        console.log(newStopPosition)
 
         this.changePosition(stopIndex, newStopPosition)
         this.updateElementBackground()
