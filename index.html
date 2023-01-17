@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Noto+Sans+Tangsa&display=swap" rel="stylesheet"> 
-    <script type="module" crossorigin src="/gradient-picker/assets/index-9fe16164.js"></script>
-    <link rel="stylesheet" href="/gradient-picker/assets/index-fb8849b1.css">
+    <script type="module" crossorigin src="/gradient-picker/assets/index-0e291b98.js"></script>
+    <link rel="stylesheet" href="/gradient-picker/assets/index-f8e440a8.css">
   </head>
   <body class="center-both">
     <div id="app" class="center-both">
@@ -36,7 +36,10 @@
           <div class="css-box">
             <div class="css-box__header">
               <h5>CSS Value</h5>
-              <button>Copy</button>
+              <div class="copy-button">
+                <span id="copied">Copied!</span>
+                <button id="copy-css">Copy</button>
+              </div>
             </div>
             <textarea name="css" id="css" readonly></textarea>
           </div>
