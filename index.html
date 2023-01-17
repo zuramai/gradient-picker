@@ -34,7 +34,10 @@
           <div class="css-box">
             <div class="css-box__header">
               <h5>CSS Value</h5>
-              <button onclick="copyCSS()">Copy</button>
+              <div class="copy-button">
+                <span id="copied">Copied!</span>
+                <button id="copy-css">Copy</button>
+              </div>
             </div>
             <textarea name="css" id="css" readonly></textarea>
           </div>
@@ -44,14 +47,6 @@
         </a>
       </div>
     </div>
-    <script type="text/javascript">
-      //copy css code
-      function copyCSS(){ 
-          let textarea = document.querySelector("#css");
-          textarea.select();
-          navigator.clipboard.writeText(textarea.value);
-        }
-    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
