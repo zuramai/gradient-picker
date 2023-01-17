@@ -7,7 +7,7 @@ const colorHandlers = document.createElement('div')
 colorHandlers.classList.add('color__handlers')
 
 // TODO: publish UI library
-const picker = new GradientPicker({
+new GradientPicker({
   el: app,
   previewEl: preview,
   colorHandlersEl: colorHandlers,
