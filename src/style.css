@@ -192,3 +192,22 @@ textarea {
   border-top: none;
   border-bottom-right-radius: .5rem;
 }
+#copied {
+  display: none;
+  color: green;
+  margin-right: .5rem;
+}
+.show {
+  display: inline-block !important;
+}
+#copy-css {
+  color: white;
+  background-color: #535bf2;
+  padding: .3rem .5rem;
+  border-radius: .4rem;
+  cursor: pointer;
+  border: none;
+}
+#copy-css:hover {
+  background-color: #6169ff;
+}
